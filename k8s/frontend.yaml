@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mardan-frontend
+  labels:
+    app: mardan-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mardan-frontend
+  template:
+    metadata:
+      labels:
+        app: mardan-frontend
+    spec:
+      containers:
+        - name: mardan-frontend
+          image: your-dockerhub-user/mardan-frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: mardan-frontend
+spec:
+  type: LoadBalancer # Exposes the React frontend directly to the public internet
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: mardan-frontend

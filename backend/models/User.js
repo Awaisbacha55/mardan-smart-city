@@ -1,0 +1,47 @@
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
+
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING(150),
+    allowNull: false,
+    unique: true,
+    validate: { isEmail: true },
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  cnic: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    unique: true,
+  },
+  phone: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
+
+  role: {
+    type: DataTypes.ENUM('citizen', 'admin', 'staff'),
+    defaultValue: 'citizen',
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
+}, {
+  tableName: 'users',
+  timestamps: true,
+});
+
+module.exports = User;

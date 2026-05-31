@@ -1,0 +1,30 @@
+const express  = require('express');
+const router   = express.Router();
+const {
+  createComplaint,
+  getAllComplaints,
+  getComplaintById,
+  updateComplaintStatus,
+  deleteComplaint,
+  trackComplaint,
+  getUserComplaints,
+  getStats,
+} = require('../controllers/complaintController');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware');
+
+// Public - track complaint by tracking ID
+router.get('/track/:trackingId', trackComplaint);
+
+// Citizen routes (protected)
+router.post('/',        protect, upload.single('image'), createComplaint);
+router.get('/my',       protect, getUserComplaints);
+router.get('/stats',    protect, getStats);
+router.get('/:id',      protect, getComplaintById);
+
+// Admin routes
+router.get('/',         protect, adminOnly, getAllComplaints);
+router.patch('/:id',    protect, adminOnly, updateComplaintStatus);
+router.delete('/:id',   protect, adminOnly, deleteComplaint);
+
+module.exports = router;
