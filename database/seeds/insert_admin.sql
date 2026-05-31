@@ -1,0 +1,1 @@
+INSERT INTO users (id, name, email, password, cnic, phone, role, "isActive", "createdAt", "updatedAt") VALUES (gen_random_uuid(), 'System Admin', 'admin@mardan.gov.pk', '$2a$12$6zqpG6D/pEAGpBtd8quzVOyP9/RI6FlvLnCuSm1DLgL9KPnai8Z1W', '0000000000000', '+920000000000', 'admin', true, NOW(), NOW()) ON CONFLICT (email) DO UPDATE SET role = 'admin';
