@@ -14,11 +14,20 @@ connectDB();
 // ── Middleware ───────────────────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 'http://localhost:5173',
-    'http://localhost:5174',   // Vite fallback port
-    'http://localhost:3000',
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      process.env.CLIENT_URL || 'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      'https://mardan-smart-city.vercel.app'
+    ];
+    // Allow any Vercel preview domain dynamically or no origin (like mobile apps/curl)
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(morgan('dev'));

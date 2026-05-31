@@ -58,10 +58,19 @@ export default function RegisterPage() {
       await register({ name: form.name, email: form.email, phone: form.phone, cnic: form.cnic, password: form.password })
       // Auto-redirected by PublicRoute on auth success
     } catch (err) {
-      const msg = err.response?.data?.message
-        || err.response?.data?.errors?.[0]?.message
-        || 'Registration failed. Please try again.'
-      setError(msg)
+      // Handle Network / CORS errors
+      if (err.message === 'Network Error') {
+        setError('Network Error: The backend server is unreachable or blocking the request via CORS.');
+        return;
+      }
+      // Handle validation array from express-validator
+      const backendErrors = err.response?.data?.errors;
+      if (backendErrors && backendErrors.length > 0) {
+        setError(backendErrors[0].msg);
+        return;
+      }
+      // Handle standard message or generic fallback
+      setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false)
     }
