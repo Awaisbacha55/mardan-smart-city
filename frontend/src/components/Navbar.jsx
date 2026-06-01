@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { FileText, Building2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
@@ -17,7 +18,24 @@ export default function Navbar({ darkMode, setDarkMode }) {
   const [activeLink, setActiveLink] = useState('#home')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20)
+      
+      // ScrollSpy Logic
+      let currentSection = '#home';
+      for (const link of navLinks) {
+        const section = document.querySelector(link.href);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          // If the top of the section is near the top of the viewport (with some offset for the navbar)
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = link.href;
+            break;
+          }
+        }
+      }
+      setActiveLink(currentSection);
+    }
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -37,7 +55,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
           <a href="#home" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-11 h-11 rounded-xl bg-brand-gradient flex items-center justify-center shadow-brand group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
-                <span className="text-2xl">🏙️</span>
+                <Building2 className="w-6 h-6 text-white" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-surface-900 animate-pulse-slow" />
             </div>
@@ -54,7 +72,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
                 key={link.label}
                 href={link.href}
                 onClick={() => setActiveLink(link.href)}
-                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer ${
                   activeLink === link.href
                     ? 'text-brand-400'
                     : 'text-white/70 hover:text-white hover:bg-white/5'
@@ -79,8 +97,9 @@ export default function Navbar({ darkMode, setDarkMode }) {
               {darkMode ? '☀️' : '🌙'}
             </button>
 
-            <a href="#complaints" className="btn-outline text-sm px-5 py-2.5">
-              🗒️ File Complaint
+            <a href="#complaints" className="btn-outline text-sm px-5 py-2.5 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              File Complaint
             </a>
 
             {isAuthenticated ? (

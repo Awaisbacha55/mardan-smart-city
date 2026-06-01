@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { CheckCircle2, Zap, ShieldCheck, FileText, CheckCircle, TrendingUp, Clock } from 'lucide-react'
 
 export default function Hero() {
   const [loaded, setLoaded] = useState(false)
@@ -123,12 +124,12 @@ export default function Hero() {
             style={{ transitionDelay: '650ms' }}
           >
             {[
-              { icon: '✅', label: '24/7 Support' },
-              { icon: '⚡', label: 'Instant Tracking' },
-              { icon: '🔒', label: 'Secure & Private' },
+              { icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />, label: '24/7 Support' },
+              { icon: <Zap className="w-4 h-4 text-brand-400" />, label: 'Instant Tracking' },
+              { icon: <ShieldCheck className="w-4 h-4 text-purple-400" />, label: 'Secure & Private' },
             ].map(item => (
               <div key={item.label} className="flex items-center gap-2 text-white/70 text-sm tracking-wide font-medium">
-                <span>{item.icon}</span>
+                {item.icon}
                 <span>{item.label}</span>
               </div>
             ))}
@@ -136,24 +137,19 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── Scroll Indicator ───────────────────────────────── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 animate-bounce-slow">
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent" />
-      </div>
 
       {/* ── Floating Stats Bar ──────────────────────────────── */}
       <div className="absolute bottom-0 inset-x-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="glass-card neon-border grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/10 rounded-b-none rounded-t-2xl overflow-hidden transition-transform hover:-translate-y-1">
             {[
-              { value: '1,248', label: 'Complaints Filed',  icon: '📋' },
-              { value: '986',   label: 'Resolved',          icon: '✅' },
-              { value: '94%',   label: 'Resolution Rate',   icon: '📈' },
-              { value: '48h',   label: 'Avg. Response',     icon: '⏱️' },
+              { value: '1,248', label: 'Complaints Filed',  icon: <FileText className="w-6 h-6 text-brand-400" /> },
+              { value: '986',   label: 'Resolved',          icon: <CheckCircle className="w-6 h-6 text-emerald-400" /> },
+              { value: '94%',   label: 'Resolution Rate',   icon: <TrendingUp className="w-6 h-6 text-emerald-400" /> },
+              { value: '48h',   label: 'Avg. Response',     icon: <Clock className="w-6 h-6 text-purple-400" /> },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-3 px-6 py-4 hover:bg-white/5 transition-colors">
-                <span className="text-2xl">{stat.icon}</span>
+                {stat.icon}
                 <div>
                   <p className="text-white font-bold text-lg leading-none">{stat.value}</p>
                   <p className="text-white/60 text-xs mt-1 tracking-wider uppercase">{stat.label}</p>
