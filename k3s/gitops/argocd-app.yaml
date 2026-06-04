@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mardan-smart-city
+  namespace: argocd
+spec:
+  project: mardan-project
+  source:
+    repoURL: 'https://github.com/Awaisbacha55/mardan-smart-city.git'
+    targetRevision: HEAD
+    path: k3s
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: mardan-smart-city
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

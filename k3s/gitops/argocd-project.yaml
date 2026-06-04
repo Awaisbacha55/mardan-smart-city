@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: mardan-project
+  namespace: argocd
+spec:
+  description: Mardan Smart City Project
+  sourceRepos:
+  - 'https://github.com/Awaisbacha55/mardan-smart-city.git'
+  destinations:
+  - namespace: mardan-smart-city
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
