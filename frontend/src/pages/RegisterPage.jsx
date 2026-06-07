@@ -22,13 +22,26 @@ export default function RegisterPage() {
 
   const handleChange = (e) => {
     setError('')
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target;
+    
+    if (name === 'cnic') {
+      let cnic = value.replace(/\D/g, '');
+      if (cnic.length > 5) {
+        cnic = cnic.slice(0, 5) + '-' + cnic.slice(5);
+      }
+      if (cnic.length > 13) {
+        cnic = cnic.slice(0, 13) + '-' + cnic.slice(13, 14);
+      }
+      setForm(prev => ({ ...prev, [name]: cnic }))
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const validate = () => {
     if (!form.name.trim())            return 'Full name is required.'
     if (!form.email.includes('@'))    return 'Please enter a valid email address.'
-    if (form.cnic.length < 13)        return 'Please enter a valid CNIC (13 digits).'
+    if (form.cnic.length < 15)        return 'Please enter a valid CNIC (e.g. 12345-1234567-1).'
     if (!form.phone.trim())           return 'Phone number is required.'
     if (form.password.length < 6)     return 'Password must be at least 6 characters.'
     if (form.password !== form.confirm) return 'Passwords do not match.'
@@ -143,7 +156,8 @@ export default function RegisterPage() {
                   name="cnic"
                   type="text"
                   required
-                  placeholder="CNIC (13 digits)"
+                  maxLength="15"
+                  placeholder="CNIC (xxxxx-xxxxxxx-x)"
                   value={form.cnic}
                   onChange={handleChange}
                   disabled={loading}
