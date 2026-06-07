@@ -17,6 +17,12 @@ export default function Navbar({ darkMode, setDarkMode }) {
   const [menuOpen,   setMenuOpen]   = useState(false)
   const [activeLink, setActiveLink] = useState('#home')
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to sign out?")) {
+      logout()
+    }
+  }
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 20)
@@ -100,7 +106,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
                     {user.name}
                   </span>
                 </Link>
-                <button onClick={logout} className="text-white/60 hover:text-white text-sm font-medium transition-colors">
+                <button onClick={handleLogout} className="text-white/60 hover:text-white text-sm font-medium transition-colors">
                   Sign Out
                 </button>
               </div>
@@ -145,7 +151,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="btn-outline text-sm text-center">👤 Dashboard</Link>
-                <button onClick={logout} className="text-sm text-red-400 py-2 hover:text-red-300 transition">Sign Out</button>
+                <button onClick={handleLogout} className="text-sm text-red-400 py-2 hover:text-red-300 transition">Sign Out</button>
               </>
             ) : (
               <Link to="/login" className="btn-primary text-sm text-center justify-center">Sign In →</Link>

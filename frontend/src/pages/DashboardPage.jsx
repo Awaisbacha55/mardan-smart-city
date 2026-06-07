@@ -383,8 +383,10 @@ export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleLogout = async () => {
-    await logout()
-    navigate('/login', { replace: true })
+    if (window.confirm("Are you sure you want to sign out?")) {
+      await logout()
+      navigate('/login', { replace: true })
+    }
   }
 
   const renderContent = () => {
