@@ -15,8 +15,9 @@ import Navbar     from './components/Navbar'
 import Hero       from './components/Hero'
 import Statistics from './components/Statistics'
 import Services   from './components/Services'
-import Emergency  from './components/Emergency'
-import Complaints from './components/Complaints'
+import AnalyticsShowcase from './components/AnalyticsShowcase'
+import Infrastructure from './components/Infrastructure'
+import LiveMonitoring from './components/LiveMonitoring'
 import About      from './components/About'
 import Footer     from './components/Footer'
 
@@ -31,14 +32,15 @@ function HomePage() {
   }, [darkMode])
 
   return (
-    <div className="bg-surface-900 text-white">
+    <div className="bg-black text-white selection:bg-brand-500/30">
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
       <main>
         <Hero />
         <Statistics />
         <Services />
-        <Emergency />
-        <Complaints />
+        <AnalyticsShowcase />
+        <Infrastructure />
+        <LiveMonitoring />
         <About />
       </main>
       <Footer />
