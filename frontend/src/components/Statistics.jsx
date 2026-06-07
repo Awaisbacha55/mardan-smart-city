@@ -1,119 +1,147 @@
-import { motion, useInView } from 'framer-motion'
-import { useRef, useEffect, useState } from 'react'
-import { Users, FileText, Activity, Car, Droplets, Bell } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import { useInView } from 'react-intersection-observer'
 
-// CountUp component for animating numbers
-function CountUp({ to, duration = 2 }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+// ── Custom count-up hook (no external dependency, highly performant) ──────────
+function useCountUp(end, duration = 2000, started = false) {
+  const nodeRef = useRef(null)
+  const rafRef = useRef(null)
 
   useEffect(() => {
-    if (!isInView) return
-    let start = 0
-    const end = parseInt(to.replace(/\D/g, ''))
-    const suffix = to.replace(/[0-9]/g, '')
-    if (start === end) return
-    
+    if (!nodeRef.current) return
+    if (!started) { 
+      nodeRef.current.textContent = '0'
+      return 
+    }
     let startTime = null
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
-      setCount(Math.floor(progress * (end - start) + start))
-      if (progress < 1) {
-        window.requestAnimationFrame(step)
-      }
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress) // easeOutExpo
+      const currentCount = Math.floor(ease * end)
+      nodeRef.current.textContent = currentCount.toLocaleString()
+      
+      if (progress < 1) rafRef.current = requestAnimationFrame(step)
+      else nodeRef.current.textContent = end.toLocaleString()
     }
-    window.requestAnimationFrame(step)
-  }, [isInView, to, duration])
+    rafRef.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [started, end, duration])
 
-  return <span ref={ref}>{count.toLocaleString()}{to.replace(/[0-9.]/g, '')}</span>
+  return nodeRef
 }
 
-export default function Statistics() {
-  const stats = [
-    { icon: Users, label: 'Citizens Served', value: '150k+', color: 'text-brand-400', bg: 'bg-brand-400/10' },
-    { icon: FileText, label: 'Active Requests', value: '2.4k', color: 'text-blue-400', bg: 'bg-blue-400/10' },
-    { icon: Activity, label: 'Infrastructure Health', value: '98%', color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
-    { icon: Car, label: 'Traffic Monitored', value: '45k', color: 'text-amber-400', bg: 'bg-amber-400/10' },
-    { icon: Droplets, label: 'Water Systems', value: '120', color: 'text-cyan-400', bg: 'bg-cyan-400/10' },
-    { icon: Bell, label: 'Emergency Alerts', value: '12', color: 'text-red-400', bg: 'bg-red-400/10' },
-  ]
+// ── Stats data ───────────────────────────────────────────────────────────────
+// Default fallback stats structure
+const baseStats = [
+  { icon: '📋', id: 'total', value: 0,  suffix: '+', label: 'Total Complaints',    sub: 'Received in 2024',        color: 'from-brand-500 to-brand-700'   },
+  { icon: '✅', id: 'resolved', value: 0,   suffix: '',  label: 'Complaints Resolved', sub: 'Successfully closed',      color: 'from-gold-400 to-gold-600'},
+  { icon: '⚡', id: 'response', value: 48,    suffix: 'h', label: 'Avg. Response Time',  sub: 'Hours to first action',    color: 'from-gold-500 to-gold-600'     },
+  { icon: '🏢', id: 'departments', value: 12,    suffix: '',  label: 'City Departments',    sub: 'Working together',         color: 'from-purple-500 to-purple-700' },
+  { icon: '👥', id: 'citizens', value: 24800, suffix: '+', label: 'Registered Citizens', sub: 'Active users on platform', color: 'from-pink-500 to-rose-600'     },
+  { icon: '📈', id: 'rate', value: 0,    suffix: '%', label: 'Resolution Rate',   sub: 'Complaints resolved',  color: 'from-cyan-500 to-sky-600'      },
+]
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  }
+// ── Stat Card ─────────────────────────────────────────────────────────────────
+function StatCard({ stat, index }) {
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.3, triggerOnce: true })
+  const countRef = useCountUp(stat.value, 2000, inView)
 
   return (
-    <section id="statistics" className="py-24 bg-black relative border-t border-white/5">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-900/20 via-black to-black" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-block mb-4"
-          >
-            <span className="text-[10px] font-bold tracking-widest uppercase text-white/40 border border-white/10 px-3 py-1 rounded-full bg-white/5">
-              Live City Metrics
-            </span>
-          </motion.div>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl font-display font-bold text-white"
-          >
-            Real-Time City Performance
-          </motion.h2>
+    <div
+      ref={inViewRef}
+      className="stat-card glass-card p-7 transition-all duration-500 cursor-default"
+      style={{
+        opacity:    inView ? 1 : 0,
+        transform:  inView ? 'translateY(0)' : 'translateY(30px)',
+        transition: `opacity 0.6s ease ${index * 80}ms, transform 0.6s ease ${index * 80}ms, box-shadow 0.3s ease`,
+      }}
+    >
+      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl mb-5 shadow-lg`}>
+        {stat.icon}
+      </div>
+      <div className="flex items-end gap-0.5 mb-1">
+        <span ref={countRef} className="text-4xl font-black text-white leading-none font-display">
+          0
+        </span>
+        <span className="text-2xl font-bold text-white/80 mb-0.5">{stat.suffix}</span>
+      </div>
+      <p className="text-white font-bold text-base mb-1 tracking-wide">{stat.label}</p>
+      <p className="text-white/50 text-sm tracking-wide">{stat.sub}</p>
+      <div className={`mt-5 h-0.5 rounded-full bg-gradient-to-r ${stat.color} opacity-60`} />
+    </div>
+  )
+}
+
+// ── Main export ───────────────────────────────────────────────────────────────
+export default function Statistics() {
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
+  const [stats, setStats] = useState(baseStats)
+  const [lastSync, setLastSync] = useState(new Date())
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get((import.meta.env.VITE_API_BASE_URL || '/api') + '/complaints/public-stats')
+        if (res.data.success) {
+          const { total, resolved } = res.data.data
+          const resolutionRate = total > 0 ? Math.round((resolved / total) * 100) : 0
+          
+          setStats(baseStats.map(s => {
+            if (s.id === 'total') return { ...s, value: total }
+            if (s.id === 'resolved') return { ...s, value: resolved }
+            if (s.id === 'rate') return { ...s, value: resolutionRate }
+            return s
+          }))
+          setLastSync(new Date())
+        }
+      } catch (err) {
+        console.error('Failed to fetch live stats', err)
+      }
+    }
+    
+    // Only fetch when scrolled into view
+    if (inView) {
+      fetchStats()
+    }
+  }, [inView])
+
+  return (
+    <section id="statistics" className="py-8 relative overflow-hidden scroll-mt-20">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-brand-800/15 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          ref={ref}
+          className={`text-center mb-10 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
+          <span className="section-badge mb-5 shadow-brand">📊 Live City Data</span>
+          <h2 className="font-display text-4xl sm:text-5xl font-black text-white mb-5">
+            Mardan by the{' '}
+            <span className="gradient-text text-shadow-glow">Numbers</span>
+          </h2>
+          <p className="text-white/70 text-lg max-w-2xl mx-auto leading-[1.7] tracking-wide">
+            Real-time performance metrics reflecting our commitment to transparent, accountable governance.
+          </p>
         </div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index}
-              variants={itemVariants}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="glass-panel rounded-2xl p-6 sm:p-8 relative group overflow-hidden"
-            >
-              <div className={`absolute top-0 left-0 w-full h-1 ${stat.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-              
-              <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center mb-6`}>
-                <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              </div>
-              
-              <div className="space-y-2">
-                <h3 className="text-4xl sm:text-5xl font-display font-bold text-white tracking-tight">
-                  <CountUp to={stat.value} />
-                </h3>
-                <p className="text-sm sm:text-base text-white/50 font-medium">
-                  {stat.label}
-                </p>
-              </div>
-
-              {/* Decorative background glow */}
-              <div className={`absolute -bottom-6 -right-6 w-24 h-24 rounded-full ${stat.bg} blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-            </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stats.map((stat, i) => (
+            <StatCard key={stat.label} stat={stat} index={i} />
           ))}
-        </motion.div>
+        </div>
+
+        <div className={`mt-8 glass-card neon-border p-6 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-700 delay-500 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 bg-gold-400 rounded-full animate-ping-slow shadow-[0_0_8px_#fbbf24]" />
+            <p className="text-white/80 text-sm tracking-wide">
+              Data updated <span className="text-gold-400 font-bold">live</span> — Last sync: {lastSync.toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })}
+            </p>
+          </div>
+          <a href="#" className="text-brand-400 text-sm font-semibold hover:text-brand-300 transition flex items-center gap-1">
+            View Full Dashboard →
+          </a>
+        </div>
       </div>
     </section>
   )

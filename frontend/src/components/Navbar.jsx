@@ -5,10 +5,10 @@ import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
   { label: 'Home',        href: '#home' },
+  { label: 'Statistics',  href: '#statistics' },
   { label: 'Services',    href: '#services' },
-  { label: 'Analytics',   href: '#analytics' },
-  { label: 'Infrastructure',href: '#infrastructure' },
-  { label: 'Monitoring',  href: '#monitoring' },
+  { label: 'Emergency',   href: '#emergency' },
+  { label: 'Complaints',  href: '#complaints' },
   { label: 'About',       href: '#about' },
 ]
 export default function Navbar({ darkMode, setDarkMode }) {
@@ -50,7 +50,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-black/95 backdrop-blur-xl border-b border-white/8 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+          ? 'bg-surface-900/95 backdrop-blur-xl border-b border-white/8 shadow-2xl'
           : 'bg-transparent'
       }`}
     >

@@ -13,14 +13,14 @@
   }
 
   body {
-    @apply bg-black text-white font-sans antialiased;
-    background: #000000;
+    @apply bg-surface-900 text-white font-sans antialiased;
+    background: #0b0616;
   }
 
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #000000; }
+  ::-webkit-scrollbar-track { background: #0b0616; }
   ::-webkit-scrollbar-thumb { 
-    background: linear-gradient(180deg, #3f3f46, #18181b);
+    background: linear-gradient(180deg, #7c3aed, #f59e0b);
     border-radius: 3px;
   }
 }
@@ -29,17 +29,12 @@
   /* Premium Glass card */
   .glass-card {
     @apply backdrop-blur-xl border border-white/10 rounded-2xl transition-all duration-300;
-    background: rgba(255, 255, 255, 0.02);
-    box-shadow: 0 4px 24px -1px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    background: rgba(20, 12, 38, 0.65);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.15);
   }
   .glass-card:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255,255,255,0.15);
-  }
-  
-  .glass-panel {
-    @apply backdrop-blur-2xl border border-white/5;
-    background: linear-gradient(145deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+    background: rgba(20, 12, 38, 0.75);
+    border-color: rgba(255,255,255,0.2);
   }
 
   /* Gradient text */
