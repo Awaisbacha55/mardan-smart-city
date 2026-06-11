@@ -1,86 +1,144 @@
-import { Building2, Globe, MessageCircle, MapPin, Phone, Mail } from 'lucide-react'
+const footerLinks = {
+  'Portal': [
+    { label: 'Submit Complaint',   href: '#complaints' },
+    { label: 'Track Complaint',    href: '#complaints' },
+    { label: 'Services Directory', href: '#services'   },
+    { label: 'Emergency Numbers',  href: '#emergency'  },
+    { label: 'City Statistics',    href: '#statistics' },
+  ],
+  'Departments': [
+    { label: 'Roads & Works',      href: '#' },
+    { label: 'Water & Sanitation', href: '#' },
+    { label: 'PESCO (Power)',      href: '#' },
+    { label: 'Police Department',  href: '#' },
+    { label: 'Municipal Corp.',    href: '#' },
+  ],
+  'About': [
+    { label: 'About Mardan',       href: '#about' },
+    { label: 'KP Government',      href: '#' },
+    { label: 'Privacy Policy',     href: '#' },
+    { label: 'Terms of Service',   href: '#' },
+    { label: 'Contact Us',         href: '#' },
+  ],
+}
+
+const socialLinks = [
+  { icon: '𝕏',   label: 'Twitter',  href: '#' },
+  { icon: 'f',   label: 'Facebook', href: '#' },
+  { icon: 'in',  label: 'LinkedIn', href: '#' },
+  { icon: '▶',   label: 'YouTube',  href: '#' },
+]
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
   return (
-    <footer className="bg-slate-900 pt-20 pb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
-          
-          {/* Brand Col */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-1">
-            <a href="#home" className="flex items-center gap-3 mb-6 block w-max">
-              <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-white" />
+    <footer className="relative border-t border-white/8 overflow-hidden">
+      {/* Subtle background */}
+      <div className="absolute inset-0 dot-grid opacity-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-48 bg-brand-900/30 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* ── Newsletter Banner ─────────────────────────── */}
+        <div className="py-10 border-b border-white/8">
+          <div className="glass-card neon-border p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-white font-bold text-xl mb-1">Stay Informed</h3>
+              <p className="text-white/50 text-sm">Get updates on city services, resolved complaints, and new initiatives.</p>
+            </div>
+            <div className="flex gap-3 w-full lg:w-auto">
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="flex-1 lg:w-72 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm focus:outline-none focus:border-brand-500/50 transition"
+              />
+              <button className="btn-primary px-6 py-3 whitespace-nowrap text-sm">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Main Footer ───────────────────────────────── */}
+        <div className="py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+          {/* Brand */}
+          <div className="lg:col-span-2">
+            <a href="#home" className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center shadow-brand">
+                <span className="text-2xl">🏙️</span>
               </div>
               <div>
-                <p className="text-white font-display font-bold text-lg leading-tight">Mardan</p>
-                <p className="text-brand-400 text-xs font-bold tracking-widest uppercase">Smart City</p>
+                <p className="text-white font-display font-bold text-xl">Mardan Smart City</p>
+                <p className="gradient-text text-xs font-medium tracking-wider">Citizen Complaint Portal</p>
               </div>
             </a>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6 pe-4">
-              A citizen-focused initiative designed to improve communication between residents and public departments through digital transformation.
+            <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-xs">
+              Empowering Mardan's 500,000+ citizens with a transparent, accountable, and efficient digital governance platform.
             </p>
-            <div className="flex items-center gap-3">
-              <a href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-500 hover:text-white transition-colors">
-                <Globe className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-brand-500 hover:text-white transition-colors">
-                <MessageCircle className="w-4 h-4" />
-              </a>
+
+            {/* Socials */}
+            <div className="flex gap-3">
+              {socialLinks.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-brand-500/20 hover:border-brand-500/40 transition text-sm font-bold"
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+
+            {/* Contact */}
+            <div className="mt-6 space-y-2">
+              {[
+                { icon: '📍', text: 'Municipal Corporation, Mardan, KP, Pakistan' },
+                { icon: '📞', text: '+92 (937) 840000' },
+                { icon: '✉️', text: 'support@mardansmartcity.gov.pk' },
+              ].map(c => (
+                <div key={c.text} className="flex items-start gap-2 text-white/40 text-sm">
+                  <span className="mt-0.5 flex-shrink-0">{c.icon}</span>
+                  <span>{c.text}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide">Quick Links</h4>
-            <ul className="space-y-3">
-              <li><a href="#about" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">About Us</a></li>
-              <li><a href="#services" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Services</a></li>
-              <li><a href="#departments" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Departments</a></li>
-              <li><a href="#success" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Success Stories</a></li>
-            </ul>
-          </div>
-
-          {/* Legal & Support */}
-          <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide">Support</h4>
-            <ul className="space-y-3">
-              <li><a href="#" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Help Center</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Privacy Policy</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Terms & Conditions</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-brand-400 transition-colors text-sm">Accessibility</a></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="text-white font-bold mb-6 tracking-wide">Contact</h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
-                <span className="text-slate-400 text-sm leading-relaxed">Nowshera Road, Mardan<br/>KPK, Pakistan</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-brand-500 shrink-0" />
-                <span className="text-slate-400 text-sm">+92 300 1234567</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-brand-500 shrink-0" />
-                <span className="text-slate-400 text-sm break-all">support@mardansmartcity.gov.pk</span>
-              </li>
-            </ul>
-          </div>
-
+          {/* Links */}
+          {Object.entries(footerLinks).map(([group, links]) => (
+            <div key={group}>
+              <p className="text-white font-semibold text-sm mb-5 uppercase tracking-widest">{group}</p>
+              <ul className="space-y-3">
+                {links.map(link => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-white/40 text-sm hover:text-brand-400 transition-colors flex items-center gap-1.5 group"
+                    >
+                      <span className="opacity-0 group-hover:opacity-100 transition text-brand-500">›</span>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between">
-          <p className="text-slate-500 text-sm">
-            &copy; {currentYear} Mardan Smart City. All rights reserved.
+        {/* ── Bottom Bar ────────────────────────────────── */}
+        <div className="py-6 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-white/30 text-sm">
+            © {new Date().getFullYear()} Mardan Smart City. All rights reserved.
           </p>
-          <div className="mt-4 md:mt-0 flex items-center justify-center gap-4 text-sm text-slate-500">
-            <span>Designed for the Citizens of Mardan</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-white/30 text-sm">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-slow" />
+              All systems operational
+            </div>
+            <span className="text-white/15">|</span>
+            <p className="text-white/30 text-sm">
+              Powered by <span className="gradient-text font-semibold">KP IT Board</span>
+            </p>
           </div>
         </div>
       </div>

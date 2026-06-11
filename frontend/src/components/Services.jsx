@@ -1,71 +1,157 @@
-import { motion } from 'framer-motion'
-import { FileText, Droplets, Car, Shield, Trash2, Bell, Heart, Bus } from 'lucide-react'
+import { useInView } from 'react-intersection-observer'
 
-export default function Services() {
-  const services = [
-    { title: 'Citizen Complaints', desc: 'Direct portal for logging, tracking, and resolving civic issues quickly.', icon: FileText },
-    { title: 'Water Services', desc: 'Manage connections, pay bills, and report water supply issues.', icon: Droplets },
-    { title: 'Traffic Management', desc: 'Real-time traffic updates and road safety reports.', icon: Car },
-    { title: 'Public Safety', desc: 'Connect directly with local police and security departments.', icon: Shield },
-    { title: 'Waste Management', desc: 'Schedule pickups and report illegal dumping areas.', icon: Trash2 },
-    { title: 'Emergency Assistance', desc: '24/7 access to fire, medical, and rescue services.', icon: Bell },
-    { title: 'Healthcare Support', desc: 'Locate nearby hospitals and book public clinic appointments.', icon: Heart },
-    { title: 'Public Transport', desc: 'View bus schedules, routes, and transit card services.', icon: Bus },
-  ]
+const services = [
+  {
+    icon:  '🗺️',
+    title: 'Roads & Infrastructure',
+    desc:  'Report potholes, damaged roads, broken bridges, and street lighting issues.',
+    count: '312 resolved',
+    color: 'from-brand-500 to-brand-700',
+    tag:   'Infrastructure',
+  },
+  {
+    icon:  '💧',
+    title: 'Water Supply',
+    desc:  'Report water shortages, pipe bursts, contamination, and billing disputes.',
+    count: '208 resolved',
+    color: 'from-brand-400 to-brand-600',
+    tag:   'Utilities',
+  },
+  {
+    icon:  '⚡',
+    title: 'Electricity',
+    desc:  'Report power outages, faulty meters, dangerous wiring, and supply issues.',
+    count: '195 resolved',
+    color: 'from-gold-400 to-gold-600',
+    tag:   'Utilities',
+  },
+  {
+    icon:  '🗑️',
+    title: 'Sanitation & Waste',
+    desc:  'Report garbage collection failures, illegal dumping, and drainage blockages.',
+    count: '167 resolved',
+    color: 'from-gold-500 to-gold-700',
+    tag:   'Sanitation',
+  },
+  {
+    icon:  '🌳',
+    title: 'Parks & Recreation',
+    desc:  'Report damaged park equipment, overgrown trees, and unsafe public spaces.',
+    count: '89 resolved',
+    color: 'from-brand-600 to-brand-800',
+    tag:   'Environment',
+  },
+  {
+    icon:  '🚔',
+    title: 'Public Safety',
+    desc:  'Report unsafe structures, street crime hotspots, and public hazards.',
+    count: '143 resolved',
+    color: 'from-rose-500 to-rose-700',
+    tag:   'Safety',
+  },
+  {
+    icon:  '🔊',
+    title: 'Noise Pollution',
+    desc:  'Report construction noise, loudspeaker violations, and industrial noise.',
+    count: '56 resolved',
+    color: 'from-fuchsia-500 to-purple-700',
+    tag:   'Environment',
+  },
+  {
+    icon:  '🏗️',
+    title: 'Illegal Construction',
+    desc:  'Report unauthorized buildings, encroachments, and zoning violations.',
+    count: '72 resolved',
+    color: 'from-orange-400 to-orange-600',
+    tag:   'Planning',
+  },
+]
+
+function ServiceCard({ svc, index }) {
+  const { ref, inView } = useInView({ threshold: 0.2, triggerOnce: true })
 
   return (
-    <section id="services" className="py-24 bg-white relative">
+    <div
+      ref={ref}
+      className="group glass-card p-6 hover:shadow-card-hover transition-all duration-400 cursor-pointer"
+      style={{
+        opacity:    inView ? 1 : 0,
+        transform:  inView ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
+        transition: `opacity 0.5s ease ${index * 60}ms, transform 0.5s ease ${index * 60}ms`,
+      }}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${svc.color} flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+          {svc.icon}
+        </div>
+        <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/50">
+          {svc.tag}
+        </span>
+      </div>
+
+      {/* Content */}
+      <h3 className="text-white font-bold text-base mb-2 group-hover:text-brand-300 transition-colors">
+        {svc.title}
+      </h3>
+      <p className="text-white/60 text-sm leading-[1.6] tracking-wide mb-4">{svc.desc}</p>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-4 border-t border-white/8">
+        <span className="text-gold-400 text-xs font-medium flex items-center gap-1">
+          <span>✓</span> {svc.count}
+        </span>
+        <a
+          href="#complaints"
+          className="text-brand-400 text-xs font-semibold flex items-center gap-1 hover:text-brand-300 transition group-hover:gap-2"
+        >
+          Report <span>→</span>
+        </a>
+      </div>
+    </div>
+  )
+}
+
+export default function Services() {
+  const { ref, inView } = useInView({ threshold: 0.1, triggerOnce: true })
+
+  return (
+    <section id="services" className="py-8 relative scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="text-center mb-16">
-          <div className="section-badge mb-6">Digital Services</div>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-3xl sm:text-4xl font-display font-bold text-slate-900 mb-6"
-          >
-            Access Public Services Online
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-slate-600 max-w-2xl mx-auto"
-          >
-            We've digitized essential city services to make them easily accessible from your computer or smartphone, 24/7.
-          </motion.p>
+        {/* Section Header */}
+        <div
+          ref={ref}
+          className={`text-center mb-10 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
+          <span className="section-badge mb-5 shadow-brand">🛠️ City Services</span>
+          <h2 className="font-display text-4xl sm:text-5xl font-black text-white mb-5">
+            What Can You{' '}
+            <span className="gradient-text text-shadow-glow">Report?</span>
+          </h2>
+          <p className="text-white/70 text-lg max-w-2xl mx-auto leading-[1.7] tracking-wide">
+            Choose your complaint category and our dedicated teams will respond within 48 hours.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="premium-card p-8 group flex flex-col items-center text-center cursor-pointer"
-            >
-              <div className="w-16 h-16 rounded-full bg-brand-50 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-brand-500 transition-all duration-300">
-                <service.icon className="w-8 h-8 text-brand-500 group-hover:text-white transition-colors duration-300" />
-              </div>
-              
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-brand-600 transition-colors">
-                {service.title}
-              </h3>
-              <p className="text-sm text-slate-600 leading-relaxed mb-6 flex-1">
-                {service.desc}
-              </p>
-              
-              <div className="text-brand-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-                Access Service <span>→</span>
-              </div>
-            </motion.div>
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {services.map((svc, i) => (
+            <ServiceCard key={svc.title} svc={svc} index={i} />
           ))}
         </div>
 
+        {/* CTA Banner */}
+        <div className={`mt-8 transition-all duration-700 delay-300 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="glass-card neon-border p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-white font-bold text-xl mb-1">Don't see your issue?</h3>
+              <p className="text-white/50 text-sm">Use our "Other" category and describe your concern in detail.</p>
+            </div>
+            <a href="#complaints" className="btn-primary whitespace-nowrap">
+              📝 File Custom Complaint
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   )
