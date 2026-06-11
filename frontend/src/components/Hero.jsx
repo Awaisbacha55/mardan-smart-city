@@ -1,161 +1,124 @@
-import { useEffect, useRef, useState } from 'react'
-import { CheckCircle2, Zap, ShieldCheck, FileText, CheckCircle, TrendingUp, Clock } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowRight, Search, MapPin, ShieldCheck, Clock } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function Hero() {
-  const [loaded, setLoaded] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [currentImg, setCurrentImg] = useState(0)
-  const heroRef = useRef(null)
-
-  const backgroundImages = [
-    '/pic-1.png',
-    '/pic-2.png',
-    '/pic-3.png',
-    '/pic-4.png',
-    '/pic-5.png',
-    '/pic-6.png',
-    '/pic-7.png'
-  ]
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 100)
-    
-    const interval = setInterval(() => {
-      setCurrentImg((prev) => (prev + 1) % backgroundImages.length)
-    }, 6000)
-    
-    return () => {
-      clearTimeout(t)
-      clearInterval(interval)
-    }
-  }, [])
-
-  const handleMouseMove = (e) => {
-    if (!heroRef.current) return
-    const { left, top, width, height } = heroRef.current.getBoundingClientRect()
-    setMousePos({
-      x: ((e.clientX - left) / width  - 0.5) * 20,
-      y: ((e.clientY - top)  / height - 0.5) * 10,
-    })
-  }
-
   return (
-    <section id="home" ref={heroRef} onMouseMove={handleMouseMove} className="relative pt-24 pb-24 flex items-center justify-center overflow-hidden scroll-mt-20">
-      {/* ── Background Image Slideshow ─────────────────────── */}
-      {backgroundImages.map((src, index) => (
-        <div
-          key={src}
-          className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-[2000ms] ease-in-out ${index === currentImg ? 'opacity-100 z-0' : 'opacity-0 -z-10'}`}
-          style={{
-            backgroundImage: `url(${src})`,
-            transform: `translate(${mousePos.x * 0.05}px, ${mousePos.y * 0.05}px) scale(1.05)`,
-          }}
+    <section id="home" className="relative min-h-[100vh] flex items-center pt-24 pb-20 overflow-hidden bg-slate-50">
+      
+      {/* Background with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-white/90 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/70 z-10" />
+        
+        {/* Soft decorative blur circles */}
+        <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-brand-100 rounded-full blur-[120px] opacity-60 mix-blend-multiply z-10 animate-pulse" />
+        <div className="absolute bottom-0 left-20 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[100px] opacity-60 mix-blend-multiply z-10" />
+
+        {/* Placeholder image for aerial view of city */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/pic-1.png')" }}
         />
-      ))}
-
-      {/* ── Overlay Layers ─────────────────────────────────── */}
-      <div className="hero-overlay absolute inset-0" />
-      <div className="absolute inset-0 dot-grid opacity-30" />
-
-      {/* ── Animated Orbs ──────────────────────────────────── */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-3xl animate-pulse-slow pointer-events-none" style={{ animationDelay: '1.5s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-700/10 rounded-full blur-3xl pointer-events-none" />
-
-      {/* ── Content ────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16">
-        <div className="max-w-3xl">
-
-          {/* Badge */}
-          <div
-            className={`transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ transitionDelay: '100ms' }}
-          >
-            <span className="section-badge mb-6 inline-flex shadow-brand">
-              <span className="w-2 h-2 bg-gold-400 rounded-full animate-ping-slow shadow-[0_0_8px_#fbbf24]" />
-              KP's First Smart City Initiative
-            </span>
-          </div>
-
-          {/* Main Heading */}
-          <div
-            className={`transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ transitionDelay: '200ms' }}
-          >
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] mb-6">
-              <span className="text-white">Mardan</span>
-              <br />
-              <span className="gradient-text text-shadow-glow">Smart City</span>
-              <br />
-              <span className="text-white/90 text-4xl sm:text-5xl lg:text-6xl">Citizen Portal</span>
-            </h1>
-          </div>
-
-          {/* Subtitle */}
-          <div
-            className={`transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ transitionDelay: '350ms' }}
-          >
-            <p className="text-white/80 text-lg sm:text-xl leading-[1.7] tracking-wide mb-10 max-w-xl">
-              Submit civic complaints, track resolutions in real time, and connect directly with Mardan's municipal services — all in one intelligent platform.
-            </p>
-          </div>
-
-          {/* CTA Buttons */}
-          <div
-            className={`flex flex-wrap gap-4 transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ transitionDelay: '500ms' }}
-          >
-            <a href="#complaints" className="btn-primary text-base px-8 py-4 group">
-              <span>📝</span>
-              <span>File a Complaint</span>
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </a>
-            <a href="#complaints" className="btn-outline text-base px-8 py-4">
-              <span>🔍</span>
-              <span>Track My Complaint</span>
-            </a>
-          </div>
-
-          {/* Trust Badges */}
-          <div
-            className={`flex flex-wrap gap-6 mt-12 transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-            style={{ transitionDelay: '650ms' }}
-          >
-            {[
-              { icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />, label: '24/7 Support' },
-              { icon: <Zap className="w-4 h-4 text-brand-400" />, label: 'Instant Tracking' },
-              { icon: <ShieldCheck className="w-4 h-4 text-purple-400" />, label: 'Secure & Private' },
-            ].map(item => (
-              <div key={item.label} className="flex items-center gap-2 text-white/70 text-sm tracking-wide font-medium">
-                {item.icon}
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          
+          {/* Left Content */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center lg:text-left"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 border border-brand-200 text-brand-700 font-medium text-sm mb-6">
+              <span className="w-2 h-2 rounded-full bg-brand-500 animate-ping" />
+              Citizen Services Portal
+            </div>
 
-      {/* ── Floating Stats Bar ──────────────────────────────── */}
-      <div className="absolute bottom-0 inset-x-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="glass-card neon-border grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/10 rounded-b-none rounded-t-2xl overflow-hidden transition-transform hover:-translate-y-1">
-            {[
-              { value: '1,248', label: 'Complaints Filed',  icon: <FileText className="w-6 h-6 text-brand-400" /> },
-              { value: '986',   label: 'Resolved',          icon: <CheckCircle className="w-6 h-6 text-emerald-400" /> },
-              { value: '94%',   label: 'Resolution Rate',   icon: <TrendingUp className="w-6 h-6 text-emerald-400" /> },
-              { value: '48h',   label: 'Avg. Response',     icon: <Clock className="w-6 h-6 text-purple-400" /> },
-            ].map((stat, i) => (
-              <div key={i} className="flex items-center gap-3 px-6 py-4 hover:bg-white/5 transition-colors">
-                {stat.icon}
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-display font-extrabold text-slate-900 tracking-tight mb-6 leading-[1.1]">
+              Building a <span className="text-brand-600">Smarter Future</span> for Mardan
+            </h1>
+            
+            <p className="text-xl text-slate-700 font-medium mb-4">
+              Connecting citizens with public services through technology, transparency, and innovation.
+            </p>
+            
+            <p className="text-lg text-slate-600 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Mardan Smart City is a modern digital platform that empowers citizens to access services, report issues, track requests, and contribute to a better community.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <Link to="/register" className="w-full sm:w-auto btn-primary py-4 px-8 text-lg hover:-translate-y-1">
+                Submit Complaint <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link to="/login" className="w-full sm:w-auto btn-outline py-4 px-8 text-lg bg-white">
+                <Search className="w-5 h-5 mr-1" /> Track Complaint
+              </Link>
+            </div>
+            
+            <div className="mt-10 flex items-center justify-center lg:justify-start gap-8 text-sm font-semibold text-slate-500">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-emerald-500" /> Secure Platform
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-amber-500" /> 24/7 Support
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Content - Floating Elements Image Composition */}
+          <div className="relative hidden lg:block h-[600px]">
+            {/* Main Image */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white z-10"
+            >
+              <img src="/media__1780243226974.png" alt="Mardan Citizens" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </motion.div>
+
+            {/* Floating Card 1 - Request Status */}
+            <motion.div 
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -left-12 top-20 bg-white p-5 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-slate-100 z-20 w-64"
+            >
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6 text-emerald-600" />
+                </div>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">{stat.value}</p>
-                  <p className="text-white/60 text-xs mt-1 tracking-wider uppercase">{stat.label}</p>
+                  <p className="text-sm font-bold text-slate-900">Issue Resolved</p>
+                  <p className="text-xs text-slate-500">Water Supply Fixed</p>
                 </div>
               </div>
-            ))}
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="w-full h-full bg-emerald-500" />
+              </div>
+            </motion.div>
+
+            {/* Floating Card 2 - Citizen Count */}
+            <motion.div 
+              animate={{ y: [10, -10, 10] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute -right-8 bottom-32 bg-white p-5 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-slate-100 z-20"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-brand-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-slate-900">50k+</p>
+                  <p className="text-sm text-slate-500 font-medium">Citizens Connected</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
+
         </div>
       </div>
     </section>
